@@ -18,8 +18,9 @@ CREATE TABLE PaymentMethod(
   type VARCHAR(10),
   number CHAR(16),
   expiryDate DATE,
-  cusId INTEGER,
+  cusId INTEGER NOT NULL,
   FOREIGN KEY (cusId) REFERENCES Customer(id)
+    ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE Warehouse(
@@ -39,8 +40,9 @@ CREATE TABLE Product(
   imageURL VARCHAR(30),
   image BLOB,
   description VARCHAR(5),
-  categoryid INTEGER,
+  categoryid INTEGER NOT NULL,
   FOREIGN KEY (categoryid) REFERENCES Category(id)
+    ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE Review(
@@ -48,17 +50,19 @@ CREATE TABLE Review(
   rating INTEGER CHECK (rating BETWEEN 1 AND 5),
   comment VARCHAR(50),
   date DATE,
-  cusId INTEGER,
-  prodId INTEGER,
-  FOREIGN KEY (cusId) REFERENCES Customer(id),
+  cusId INTEGER NOT NULL,
+  prodId INTEGER NOT NULL,
+  FOREIGN KEY (cusId) REFERENCES Customer(id)
+    ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (prodId) REFERENCES Product(id)
+    ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE Shipment(
   id INTEGER PRIMARY KEY,
   date DATE,
   description VARCHAR(50),
-  whId INTEGER,
+  whId INTEGER NOT NULL,
   FOREIGN KEY (whId) REFERENCES Warehouse(id)
 );
 
@@ -71,43 +75,50 @@ CREATE TABLE OrderSummary(
   shipToState VARCHAR(5),
   shipToCountry VARCHAR(10),
   shipToPostCode VARCHAR(6),
-  custId INTEGER,
-  shipId INTEGER,
-  FOREIGN KEY (custId) REFERENCES Customer(id),
+  custId INTEGER NOT NULL,
+  shipId INTEGER NOT NULL,
+  FOREIGN KEY (custId) REFERENCES Customer(id)
+    ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (shipId) REFERENCES Shipment(id)
+    ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE OrderProduct(
   quantity INTEGER,
   price DECIMAL(9,2),
-  prodId INTEGER,
-  orderId INTEGER,
+  prodId INTEGER NOT NULL,
+  orderId INTEGER NOT NULL,
   PRIMARY KEY (prodId, orderId),
-  FOREIGN KEY (prodId) REFERENCES Product(id),
+  FOREIGN KEY (prodId) REFERENCES Product(id)
+    ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (orderId) REFERENCES OrderSummary(id)
+    ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 
 
 CREATE TABLE ProductInventory(
   quantity INTEGER,
-  prodId INTEGER,
-  whId INTEGER,
+  prodId INTEGER NOT NULL,
+  whId INTEGER NOT NULL,
   PRIMARY KEY (prodId, whId),
-  FOREIGN KEY (prodId) REFERENCES Product(id),
+  FOREIGN KEY (prodId) REFERENCES Product(id)
+    ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (whId) REFERENCES Warehouse(id)
+    ON UPDATE CASCADE ON DELETE CASCADE
 );
-
 
 
 CREATE TABLE InCart(
   quantity INTEGER,
   price DECIMAL(9,2),
-  prodId INTEGER,
-  custId INTEGER,
+  prodId INTEGER NOT NULL,
+  custId INTEGER NOT NULL,
   PRIMARY KEY (prodId, custId),
-  FOREIGN KEY (prodId) REFERENCES Product(id),
+  FOREIGN KEY (prodId) REFERENCES Product(id)
+    ON UPDATE CASCADE ON DELETE CASCADE,
   FOREIGN KEY (custId) REFERENCES Customer(id)
+    ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 
